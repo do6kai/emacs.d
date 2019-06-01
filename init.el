@@ -10,13 +10,21 @@
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+
 (package-initialize)
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
 ;; use-package setup
 (eval-when-compile
   (require 'use-package))
 
 (use-package gruvbox-theme
+  :ensure t
   :config
   (load-theme 'gruvbox-dark-soft t))
 
