@@ -3,6 +3,11 @@
 (if (file-exists-p custom-file)
   (load custom-file))
 
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(unless (string-equal system-type "darwin")
+  (menu-bar-mode -1))
+
 ;; Check which fonts are available and set the font.
 (cond
   ((find-font (font-spec :name "SauceCodePro Nerd Font Mono"))
