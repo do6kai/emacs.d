@@ -1,3 +1,8 @@
+;; Emacs core settings
+(setq custom-file "~/.emacs-custom.el")
+(if (file-exists-p custom-file)
+  (load custom-file))
+
 ;; Add the melpa repo
 ;; https://github.com/melpa/melpa
 (require 'package)
