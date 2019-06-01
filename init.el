@@ -3,6 +3,15 @@
 (if (file-exists-p custom-file)
   (load custom-file))
 
+;; Check which fonts are available and set the font.
+(cond
+  ((find-font (font-spec :name "SauceCodePro Nerd Font Mono"))
+    (set-frame-font "SauceCodePro Nerd Font Mono-12"))
+  ((find-font (font-spec :name "Menlo"))
+    (set-frame-font "Menlo-12"))
+  ((find-font (font-spec :name "Monospace"))
+    (set-frame-font "Monospace-12")))
+
 ;; Add the melpa repo
 ;; https://github.com/melpa/melpa
 (require 'package)
