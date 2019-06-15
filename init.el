@@ -8,6 +8,8 @@
 (unless (string-equal system-type "darwin")
   (menu-bar-mode -1))
 
+(blink-cursor-mode -1)
+
 ;; Check which fonts are available and set the font.
 (cond
   ((find-font (font-spec :name "SauceCodePro Nerd Font Mono"))
@@ -16,6 +18,14 @@
     (set-frame-font "Menlo-12"))
   ((find-font (font-spec :name "Monospace"))
     (set-frame-font "Monospace-12")))
+
+;; Fix MacOS keys
+(if (string-equal system-type "darwin")
+    (progn
+      (setq mac-option-key-is-meta nil)
+      (setq mac-command-is-meta t)
+      (setq mac-command-modifier 'meta)
+      (setq mac-option-modifier nil)))
 
 ;; Add the melpa repo
 ;; https://github.com/melpa/melpa
@@ -42,6 +52,12 @@
 (eval-when-compile
   (require 'use-package))
 
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
 (use-package gruvbox-theme
   :ensure t
   :config
@@ -51,3 +67,44 @@
   :ensure t
   :config
   (evil-mode 1))
+
+(use-package company
+  :ensure t
+  :config
+  (add-hook 'after-init-hook 'global-company-mode))
+
+(use-package auctex
+  :defer t
+  :ensure t
+  :config
+  (progn
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq TeX-save-query nil)
+    (pdf-tools-install)
+    (setq TeX-view-program-selection '((output-pdf "PDF Tools")))
+    (setq 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)
+    (setq TeX-source-correlate-method 'synctex)
+    (setq TeX-source-correlate-mode t)
+    (setq-default TeX-master nil)
+    (setq reftex-plug-into-AUCTeX t)
+    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)))
+
+(use-package latex-pretty-symbols
+  :ensure t)
+
+(use-package magic-latex-buffer
+  :ensure t
+  :config
+  (add-hook 'TeX-mode-hook 'magic-latex-buffer))
+
+(use-package company-auctex
+  :ensure t
+  :config
+  (company-auctex-init))
+
+(use-package auctex-latexmk
+  :ensure t)
+
+(use-package latex-preview-pane
+  :ensure t)
